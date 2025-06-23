@@ -1,0 +1,17 @@
+/* Navbar y encabezado */
+.navbar {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* Contenedor de título o encabezado */
+.title-container {
+    background: rgb(255, 255, 255);
+    padding: 10px;
+    border-radius: 50px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.bg-light {
+    background: linear-gradient(135deg, #dbe2ef, #a2acb5) !important;
+}

@@ -1,0 +1,18 @@
+# Ignora archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Ignora carpetas de IDEs
+.vscode/
+.idea/
+
+# Ignora archivos temporales
+*.log
+*.tmp
+
+# Ignora entorno de producción
+vendor/
+node_modules/
+
+# Ignora configuración local
+app/config/config.php
