@@ -5,7 +5,7 @@ class DashboardModel extends ModelBase
 
     public function obtenerUsuarioConMasVentas()
     {
-        $sql = "SELECT u.id_usuario, u.nombre_completo, COUNT(v.id_venta) AS total_ventas
+        $sql = "SELECT u.id_usuario, u.nombre_usuario, COUNT(v.id_venta) AS total_ventas
             FROM ventas v
             INNER JOIN usuarios u ON v.id_usuario = u.id_usuario
             GROUP BY u.id_usuario
@@ -38,23 +38,30 @@ class DashboardModel extends ModelBase
         $result = $this->db->query($sql);
         return $result->fetch_assoc();
     }
+    public function obtenerTopVendedores($limite = 5)
+    {
+        $sql = "SELECT u.nombre_usuario, COUNT(v.id_venta) AS total_ventas
+            FROM ventas v
+            INNER JOIN usuarios u ON v.id_usuario = u.id_usuario
+            GROUP BY u.id_usuario
+            ORDER BY total_ventas DESC
+            LIMIT " . intval($limite);
 
-    public function obtenerProductoMasVendido()
+        $result = $this->db->query($sql);
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+    public function obtenerProductoMasVendido($limite = 5)
     {
         $sql = "SELECT p.nombre, SUM(dv.cantidad) AS total_vendidos
-        FROM detalle_venta dv
-        INNER JOIN productos p ON dv.id_producto = p.id_producto
-        GROUP BY dv.id_producto
-        ORDER BY total_vendidos DESC
-        LIMIT 1";
+            FROM detalle_venta dv
+            INNER JOIN productos p ON dv.id_producto = p.id_producto
+            GROUP BY dv.id_producto
+            ORDER BY total_vendidos DESC
+            LIMIT " . intval($limite);
 
         $resultado = $this->db->query($sql);
 
-        if ($resultado && $resultado->num_rows > 0) {
-            return $resultado->fetch_assoc(); // ← aquí se devuelve el producto más vendido
-        }
-
-        return null;
+        return $resultado->fetch_all(MYSQLI_ASSOC);
     }
 
     public function obtenerProductosConStockBajo()
@@ -63,4 +70,53 @@ class DashboardModel extends ModelBase
         $result = $this->db->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+    public function obtenerVentasPorMes()
+    {
+        $sql = "SELECT MONTH(fecha_venta) AS mes, SUM(total) AS total
+            FROM ventas
+            WHERE YEAR(fecha_venta) = YEAR(CURDATE())
+            GROUP BY mes
+            ORDER BY mes";
+
+        $result = $this->db->query($sql);
+
+        // Convertimos a un arreglo de 12 meses con ceros donde no hay datos
+        $meses = array_fill(1, 12, 0);
+
+        while ($row = $result->fetch_assoc()) {
+            $meses[(int) $row['mes']] = (float) $row['total'];
+        }
+
+        return $meses; // Devuelve array: [1 => 1000, 2 => 1200, ..., 12 => 0]
+    }
+
+    public function obtenerVentasPorCategoria()
+    {
+        $sql = "SELECT c.nombre AS categoria, SUM(dv.cantidad) AS total_vendidos
+            FROM detalle_venta dv
+            INNER JOIN productos p ON dv.id_producto = p.id_producto
+            INNER JOIN categorias c ON p.id_categoria = c.id_categoria
+            GROUP BY c.id_categoria
+            ORDER BY total_vendidos DESC";
+
+        $result = $this->db->query($sql);
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function obtenerComprasPorMes()
+    {
+        $sql = "SELECT MONTH(fecha_compra) AS mes, SUM(total) AS total
+            FROM compras
+            WHERE YEAR(fecha_compra) = YEAR(CURDATE())
+            GROUP BY mes
+            ORDER BY mes";
+
+        $result = $this->db->query($sql);
+        $meses = array_fill(1, 12, 0);
+        while ($row = $result->fetch_assoc()) {
+            $meses[(int) $row['mes']] = (float) $row['total'];
+        }
+        return array_values($meses);
+    }
+
 }

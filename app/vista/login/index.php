@@ -18,7 +18,7 @@ if (session_status() === PHP_SESSION_NONE) {
   <div class="login-container">
     <form class="login-form" action="<?= URL_BASE ?>/login/validar" method="POST">
       <h2>Ingreso al sistema</h2>
-      <img src="<?= URL_BASE ?>/img/logo.png" alt="Logo" style="max-width: 300px; height: auto;">
+      <img src="<?= URL_BASE ?>/img/logo.png" alt="Logo" style="max-width: 200px; height: auto;">
 
       <!-- ✅ MENSAJE DE ERROR FLASH -->
       <?php if (!empty($_SESSION['flash_message'])): ?>
@@ -30,6 +30,9 @@ if (session_status() === PHP_SESSION_NONE) {
 
       <input type="text" name="nombre_usuario" placeholder="Usuario" required>
       <input type="password" name="contraseña" placeholder="Contraseña" required>
+      <p style="margin-top: 10px;">
+        <a href="<?= URL_BASE ?>/login/recuperar">¿Olvidaste tu contraseña?</a>
+      </p>
       <button type="submit">Iniciar sesión</button>
     </form>
   </div>

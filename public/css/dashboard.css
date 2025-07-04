@@ -15,14 +15,19 @@
 }
 
 .card {
-    position: relative;
-    width: 260px;
-    height: 280px;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    min-height: 300px;
+    height: auto;
 }
+
+
+canvas {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100%;
+    display: block;
+}
+
 
 .card:hover {
     transform: scale(1.05);
@@ -44,10 +49,7 @@
     object-fit: cover;
 }
 
-p {
-    font-size: 25px;
-    text-align: center;
-}
+
 
 .card .front h3 {
     position: absolute;
@@ -93,4 +95,21 @@ p {
 .main-content {
     flex: 1;
     padding: 30px;
+}
+
+.carousel {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.carousel>article {
+    flex: 1 1 320px;
+    max-width: 100%;
+}
+
+
+.carousel:hover>article {
+    animation-play-state: paused;
 }

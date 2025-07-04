@@ -45,4 +45,12 @@ class UsuarioModel extends ModelBase
         return $stmt->execute();
 
     }
+    public function obtenerPorNombreUsuario($nombre_usuario)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE nombre_usuario = ?");
+        $stmt->bind_param("s", $nombre_usuario);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
 }

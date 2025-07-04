@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Editar Categoría</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+<?php
+$titulo = "Editar Categoría";
+require_once __DIR__ . '/../layout/head.php';
+?>
+
 
 <body>
     <div class="container mt-5">

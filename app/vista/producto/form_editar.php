@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Editar Producto</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+<?php
+$titulo = "Editar Producto";
+require_once __DIR__ . '/../layout/head.php';
+?>
 
 <body>
     <div class="container mt-5">
@@ -61,7 +60,7 @@
                 <input type="number" name="stock_minimo" id="stock_minimo" class="form-control"
                     value="<?= htmlspecialchars($producto['stock_minimo']) ?>" required>
             </div>
-            
+
             <div class="d-flex justify-content-between">
                 <a href="<?= URL_BASE ?>/producto/index" class="btn btn-secondary">Cancelar</a>
                 <button type="submit" class="btn btn-primary">Guardar Cambios</button>

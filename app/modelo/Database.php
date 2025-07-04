@@ -1,7 +1,6 @@
 <?php
 // app/modelo/Database.php
 
-
 class Database
 {
     public static function conectar()
