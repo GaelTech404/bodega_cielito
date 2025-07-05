@@ -3,22 +3,28 @@
 class CategoriaController
 {
     private $model;
-
+    private $db;
     public function __construct()
     {
-        $db = Database::conectar(); // ✅ Conexión única
-        $this->model = new CategoriaModel($db); // ✅ Inyectar conexión
+        AuthHelper::verificarAcceso();
+
+        $this->db = Database::conectar(); // ✅ solo una vez
+
+        $this->model = new CategoriaModel($this->db); // ✅ Inyectar conexión
     }
 
     public function index()
     {
         $busqueda = $_GET['busqueda'] ?? '';
         $categorias = $this->model->obtenerTodas($busqueda);
-        require '../app/vista/categoria/index.php';
+
+        ViewHelper::render('categoria/index', ['categorias' => $categorias, 'busqueda' => $busqueda]);
     }
 
     public function editar($id)
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         if (!$id) {
             echo "ID no proporcionado";
             exit;
@@ -36,6 +42,8 @@ class CategoriaController
 
     public function insertar()
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre = $_POST['nombre'] ?? '';
             $descripcion = $_POST['descripcion'] ?? '';
@@ -52,6 +60,8 @@ class CategoriaController
 
     public function actualizar()
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         $id = $_POST['id_categoria'];
         $nombre = $_POST['nombre'];
         $descripcion = $_POST['descripcion'];
@@ -62,6 +72,8 @@ class CategoriaController
 
     public function eliminar($id)
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         if (!$id) {
             echo "ID no proporcionado";
             exit;

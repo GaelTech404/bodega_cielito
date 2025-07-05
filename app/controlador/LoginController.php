@@ -3,10 +3,13 @@
 class LoginController
 {
     private $model;
+    private $db;
 
     public function __construct()
     {
-        $this->model = new LoginModel(Database::conectar());
+        $this->db = Database::conectar(); // ✅ solo una vez
+
+        $this->model = new LoginModel($this->db);
     }
 
     public function index()
@@ -21,7 +24,6 @@ class LoginController
     public function enviar_recuperacion()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            SessionHelper::start();
 
             // CSRF Token
             if (!hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'] ?? '')) {
@@ -49,11 +51,8 @@ class LoginController
             exit;
         }
     }
-
     public function validar()
     {
-
-        SessionHelper::start();
 
         $nombre_usuario = ValidationHelper::limpiar($_POST['nombre_usuario'] ?? '');
         $clave_ingresada = ValidationHelper::limpiar($_POST['contraseña'] ?? '');
@@ -72,10 +71,13 @@ class LoginController
         $usuario = $this->model->obtenerUsuarioPorNombre($nombre_usuario);
 
         if ($usuario && password_verify($clave_ingresada, $usuario['contraseña'])) {
-            SessionHelper::set('nombre_usuario', $usuario['nombre_usuario']);
-            SessionHelper::set('nombre_completo', $usuario['nombre_completo']);
-            SessionHelper::set('correo', $usuario['correo']); // ✅ Agrega esta línea
-            SessionHelper::set('rol', $usuario['rol']);
+            SessionHelper::set('usuario', [
+                'id_usuario' => $usuario['id_usuario'],
+                'nombre_usuario' => $usuario['nombre_usuario'],
+                'nombre_completo' => $usuario['nombre_completo'],
+                'correo' => $usuario['correo'],
+                'rol' => $usuario['rol']
+            ]);
 
 
             RedirectHelper::to(URL_BASE . '/inicio');

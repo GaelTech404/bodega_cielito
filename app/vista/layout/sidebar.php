@@ -1,11 +1,15 @@
 <?php
-require_once __DIR__ . '/../../config/config.php'; // Ruta desde layout/
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../helpers/AuthHelper.php';
 
-$nombreUsuario = $_SESSION['nombre_usuario'] ?? 'Invitado';
-$iniciales = strtoupper(substr($nombreUsuario, 0, 2));
+AuthHelper::verificarAcceso(); // ✅ Evita acceso sin login
+
+$usuario = $_SESSION['usuario'] ?? null;
+$nombreUsuario = $usuario['nombre_usuario'];
+$nombreCompleto = $usuario['nombre_completo'];
+$correo = $usuario['correo'] ?? '';
+$rol = $usuario['rol'] ?? '';
+$iniciales = strtoupper(substr($nombreCompleto, 0, 1) . substr(strrchr($nombreCompleto, ' '), 1, 1));
 ?>
 
 
@@ -86,19 +90,15 @@ $iniciales = strtoupper(substr($nombreUsuario, 0, 2));
 
                         <!-- Info del usuario -->
                         <div class="text-start flex-grow-1">
-                            <div class="fw-semibold truncate"><?= $_SESSION['nombre_completo'] ?? 'Invitado' ?>
+                            <div class="fw-semibold  truncar" title="<?= htmlspecialchars($nombreCompleto) ?>">
+                                <?= htmlspecialchars($nombreCompleto) ?>
                             </div>
-                            <div class="fw-semibold truncar w-100" style=" font-size: 12px; ""
-                                title="<?= htmlspecialchars($_SESSION['correo'] ?? '') ?>">
-                                <?= $_SESSION['correo'] ?>
-                            </div>
-                            <div class="fw-semibold small text-truncate"><?= $_SESSION['rol'] ?? '' ?></div>
-
+                            <div class="fw-semibold small text-truncate"><?= htmlspecialchars($rol) ?></div>
                         </div>
                     </div>
                 </div>
-
             </div>
+
             <hr class="my-1 mx-2 border-secondary">
             <li>
                 <a class="dropdown-item d-flex align-items-center" href="<?= URL_BASE ?>/perfil/apariencia">

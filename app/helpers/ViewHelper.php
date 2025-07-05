@@ -3,11 +3,16 @@ class ViewHelper
 {
     public static function render(string $rutaVista, array $data = []): void
     {
-        // Incluir variables globales
-        $data['nombreUsuario'] = $_SESSION['nombre_usuario'] ?? 'Invitado';
-        $data['rolUsuario'] = $_SESSION['rol'] ?? '';
-        $data['nombreCompleto'] = $_SESSION['nombre_completo'] ?? '';
+        $usuario = $_SESSION['usuario'] ?? null;
+
+        $data['usuario'] = $usuario;
+        $data['nombreUsuario'] = $usuario['nombre_usuario'] ?? 'Invitado';
+        $data['rolUsuario'] = $usuario['rol'] ?? '';
+        $data['nombreCompleto'] = $usuario['nombre_completo'] ?? '';
+        $data['correoUsuario'] = $usuario['correo'] ?? '';
         $data['URL_BASE'] = defined('URL_BASE') ? URL_BASE : '';
+        $data['tema'] = $_SESSION['tema'] ?? 'light';
+
 
         extract($data, EXTR_SKIP);
 

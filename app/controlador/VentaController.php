@@ -9,6 +9,8 @@ class VentaController
 
     public function __construct()
     {
+        AuthHelper::verificarAcceso();
+
         $this->db = Database::conectar();
         $this->ventaModel = new VentaModel($this->db);
         $this->productoModel = new ProductoModel($this->db);
@@ -17,27 +19,51 @@ class VentaController
 
     public function index()
     {
+        $usuario = AuthHelper::getUsuario();
+        $rol = $usuario['rol'];
+        $id_usuario = $usuario['id_usuario'];
         $busqueda = $_GET['busqueda'] ?? '';
 
-        $ventas = $this->ventaModel->obtenerVentasConUsuarios($busqueda); // Puedes añadirle $busqueda si lo implementas
+        // ✅ Si es admin, puede ver todas las ventas
+        if ($rol === 'admin') {
+            $ventas = $this->ventaModel->obtenerVentasConUsuarios($busqueda);
+        } else {
+            $ventas = $this->ventaModel->obtenerVentasPorUsuario($id_usuario, $busqueda);
+        }
+
         $productos = $this->productoModel->obtenerTodos();
         $usuarios = $this->usuarioModel->obtenerTodos();
 
-        require '../app/vista/venta/index.php';
+        ViewHelper::render('venta/index', [
+            'ventas' => $ventas,
+            'productos' => $productos,
+            'usuarios' => $usuarios,
+            'busqueda' => $busqueda
+        ]);
     }
 
     public function detalle($id)
     {
         require_once '../app/modelo/DetalleVentaModel.php';
 
-        $detalleModel = new DetalleVentaModel(Database::conectar());
-
+        $detalleModel = new DetalleVentaModel($this->db);
         $venta = $this->ventaModel->obtenerPorId($id);
+
+        if (!$venta) {
+            echo "Venta no encontrada.";
+            exit;
+        }
+
+        // ✅ Solo dueño o admin puede verla
+        $usuario = AuthHelper::getUsuario();
+        if ($usuario['rol'] !== 'admin' && $venta['id_usuario'] !== $usuario['id_usuario']) {
+            RedirectHelper::to(URL_BASE . '/venta/index', '⛔ No tiene acceso a esta venta.');
+        }
+
         $detalles = $detalleModel->obtenerDetallesPorVenta($id);
         require '../app/vista/venta/ver_detalle.php';
     }
 
-    // Mostrar formulario de edición
     public function editar($id)
     {
         if (!$id) {
@@ -45,31 +71,30 @@ class VentaController
             exit;
         }
 
-        $db = Database::conectar(); // ✅ una sola vez
-
-        $usuarioModel = new UsuarioModel($db);
-        $detalleModel = new DetalleVentaModel($db);
-        $ventaModel = new VentaModel($db); // si no lo estás inyectando desde el constructor
-
-        // Obtener la venta
-        $venta = $ventaModel->obtenerPorId($id);
+        $venta = $this->ventaModel->obtenerPorId($id);
         if (!$venta) {
             echo "Venta no encontrada";
             exit;
         }
 
-        $usuarios = $usuarioModel->obtenerTodos();
+        $usuario = AuthHelper::getUsuario();
+        if ($usuario['rol'] !== 'admin' && $venta['id_usuario'] !== $usuario['id_usuario']) {
+            RedirectHelper::to(URL_BASE . '/venta/index', '⛔ No puede editar esta venta.');
+        }
+
+        $detalleModel = new DetalleVentaModel($this->db);
+        $usuarios = $this->usuarioModel->obtenerTodos();
         $detalleVenta = $detalleModel->obtenerDetallesPorVenta($id);
 
         require '../app/vista/venta/form_editar.php';
     }
 
-
-    // Insertar nueva venta
     public function insertar()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id_usuario = $_POST['id_usuario'] ?? '';
+            $usuario = AuthHelper::getUsuario();
+            $id_usuario = $usuario['id_usuario'];
+
             $fecha_venta = $_POST['fecha_venta'] ?? '';
             $estado = $_POST['estado'] ?? '';
             $productos = $_POST['id_producto'] ?? [];
@@ -78,8 +103,16 @@ class VentaController
 
             if ($id_usuario !== '' && $fecha_venta !== '' && count($productos) > 0) {
                 try {
-                    $this->ventaModel->insertarVentaCompleta($id_usuario, $fecha_venta, $estado, $productos, $cantidades, $precios);
-                    header("Location:  " . URL_BASE . "/venta/index");
+                    $this->ventaModel->insertarVentaCompleta(
+                        $id_usuario,
+                        $fecha_venta,
+                        $estado,
+                        $productos,
+                        $cantidades,
+                        $precios
+                    );
+
+                    header("Location: " . URL_BASE . "/venta/index");
                     exit;
                 } catch (Exception $e) {
                     echo "Error al guardar: " . $e->getMessage();
@@ -90,7 +123,6 @@ class VentaController
         }
     }
 
-    // Actualizar venta
     public function actualizar()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -99,19 +131,26 @@ class VentaController
             $fecha_venta = $_POST['fecha_venta'];
             $estado = $_POST['estado'];
 
-            // Calcular el total desde detalle_venta
+            $venta = $this->ventaModel->obtenerPorId($id_venta);
+            if (!$venta) {
+                echo "Venta no encontrada.";
+                exit;
+            }
+
+            $usuario = AuthHelper::getUsuario();
+            if ($usuario['rol'] !== 'admin' && $venta['id_usuario'] !== $usuario['id_usuario']) {
+                RedirectHelper::to(URL_BASE . '/venta/index', '⛔ No puede actualizar esta venta.');
+            }
+
             $detalleModel = new DetalleVentaModel($this->db);
             $total = $detalleModel->calcularTotalPorVenta($id_venta);
 
-            // Actualizar la venta con el total real calculado
             $this->ventaModel->actualizar($id_venta, $id_usuario, $fecha_venta, $total, $estado);
-
             header("Location:  " . URL_BASE . "/venta/index");
             exit;
         }
     }
 
-    // Eliminar venta
     public function eliminar($id)
     {
         if (!$id) {
@@ -119,8 +158,18 @@ class VentaController
             exit;
         }
 
-        $this->ventaModel->eliminar($id);
+        $venta = $this->ventaModel->obtenerPorId($id);
+        if (!$venta) {
+            echo "Venta no encontrada.";
+            exit;
+        }
 
+        $usuario = AuthHelper::getUsuario();
+        if ($usuario['rol'] !== 'admin' && $venta['id_usuario'] !== $usuario['id_usuario']) {
+            RedirectHelper::to(URL_BASE . '/venta/index', '⛔ No puede eliminar esta venta.');
+        }
+
+        $this->ventaModel->eliminar($id);
         header("Location:  " . URL_BASE . "/venta/index");
     }
 }

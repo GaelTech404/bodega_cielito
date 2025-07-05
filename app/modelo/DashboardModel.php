@@ -2,41 +2,17 @@
 
 class DashboardModel extends ModelBase
 {
-
-    public function obtenerUsuarioConMasVentas()
+    public function obtenerProductosMasRentables($limite = 5)
     {
-        $sql = "SELECT u.id_usuario, u.nombre_usuario, COUNT(v.id_venta) AS total_ventas
-            FROM ventas v
-            INNER JOIN usuarios u ON v.id_usuario = u.id_usuario
-            GROUP BY u.id_usuario
-            ORDER BY total_ventas DESC
-            LIMIT 1";
-
-        $result = $this->db->query($sql);
-        return $result->fetch_assoc();
-    }
-    public function obtenerTotalVentasMesActual()
-    {
-        $sql = "SELECT SUM(total) AS total_mes
-            FROM ventas
-            WHERE MONTH(fecha_venta) = MONTH(CURDATE()) 
-              AND YEAR(fecha_venta) = YEAR(CURDATE())";
-
-        $result = $this->db->query($sql);
-        return $result->fetch_assoc();
-    }
-    public function obtenerUltimaVentaConProducto()
-    {
-        $sql = "SELECT v.fecha_venta, u.nombre_completo AS usuario, p.nombre AS producto
-            FROM ventas v
-            INNER JOIN detalle_venta dv ON v.id_venta = dv.id_venta
+        $sql = "SELECT p.nombre, SUM(dv.cantidad * dv.precio_unitario) AS ingresos
+            FROM detalle_venta dv
             INNER JOIN productos p ON dv.id_producto = p.id_producto
-            INNER JOIN usuarios u ON v.id_usuario = u.id_usuario
-            ORDER BY v.fecha_venta DESC
-            LIMIT 1";
+            GROUP BY dv.id_producto
+            ORDER BY ingresos DESC
+            LIMIT " . intval($limite);
 
         $result = $this->db->query($sql);
-        return $result->fetch_assoc();
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
     public function obtenerTopVendedores($limite = 5)
     {
@@ -117,6 +93,24 @@ class DashboardModel extends ModelBase
             $meses[(int) $row['mes']] = (float) $row['total'];
         }
         return array_values($meses);
+    }
+    public function obtenerValorTotalInventarioCompra()
+    {
+        $sql = "SELECT SUM(stock * precio_compra) AS valor_compra
+            FROM productos
+            WHERE activo = 1";
+
+        $result = $this->db->query($sql);
+        return $result->fetch_assoc();
+    }
+    public function obtenerValorTotalInventarioVenta()
+    {
+        $sql = "SELECT SUM(stock * precio_venta) AS valor_venta
+            FROM productos
+            WHERE activo = 1";
+
+        $result = $this->db->query($sql);
+        return $result->fetch_assoc();
     }
 
 }

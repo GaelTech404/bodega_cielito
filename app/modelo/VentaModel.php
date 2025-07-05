@@ -43,6 +43,35 @@ class VentaModel extends ModelBase
         return $stmt->get_result()->fetch_assoc();
     }
 
+    public function obtenerVentasPorUsuario($id_usuario, $busqueda = '')
+    {
+        if (!empty($busqueda)) {
+            $busqueda = "%$busqueda%";
+            $sql = "SELECT v.*, u.nombre_completo AS nombre_usuario 
+                FROM ventas v
+                INNER JOIN usuarios u ON v.id_usuario = u.id_usuario
+                WHERE v.id_usuario = ? AND (
+                    u.nombre_completo LIKE ? OR
+                    v.fecha_venta LIKE ?
+                )";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->bind_param("iss", $id_usuario, $busqueda, $busqueda);
+        } else {
+            $sql = "SELECT v.*, u.nombre_completo AS nombre_usuario 
+                FROM ventas v
+                INNER JOIN usuarios u ON v.id_usuario = u.id_usuario
+                WHERE v.id_usuario = ?";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->bind_param("i", $id_usuario);
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
 
     public function insertarVentaCompleta($id_usuario, $fecha_venta, $estado, $productos, $cantidades, $precios)
     {

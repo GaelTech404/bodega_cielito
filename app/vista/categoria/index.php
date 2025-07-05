@@ -1,9 +1,5 @@
 <?php
-session_start();
-if (!isset($_SESSION['nombre_usuario'])) {
-    header("Location: " . URL_BASE . "/login/index");
-    exit;
-}
+AuthHelper::verificarAcceso();
 
 $titulo = "Gestión de Categorias";
 $contenido = __DIR__ . '/categoria_contenido.php'; // Mueves el contenido del <body> aquí

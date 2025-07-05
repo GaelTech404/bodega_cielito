@@ -3,19 +3,18 @@
 class PerfilController
 {
     private $db;
-    private $usuarioModel;
+    private $model;
 
     public function __construct()
     {
         $this->db = Database::conectar();
-        $this->usuarioModel = new UsuarioModel($this->db);
+        $this->model = new UsuarioModel($this->db);
     }
 
     public function index()
     {
-        session_start();
-        $nombreUsuario = $_SESSION['nombre_usuario'] ?? 'Invitado';
-        require_once '../app/vista/perfil/index.php';
+        ViewHelper::render('perfil/index');
+
     }
 
     public function apariencia()
@@ -24,7 +23,6 @@ class PerfilController
     }
     public function guardarTema()
     {
-        session_start();
         $tema = $_POST['tema'] ?? 'light'; // Valor por defecto
 
         if (in_array($tema, ['light', 'dark', 'system'])) {

@@ -2,43 +2,48 @@
 
 class ProductoController
 {
-    private $model;
+    private $productoModel;
     private $categoriaModel;
     private $db;
     public function __construct()
     {
+        AuthHelper::verificarAcceso();
+
         $this->db = Database::conectar(); // ✅ solo una vez
-        $this->model = new ProductoModel($this->db);
+
+        $this->productoModel = new ProductoModel($this->db);
         $this->categoriaModel = new CategoriaModel($this->db);
 
     }
 
     public function index()
     {
+
         $busqueda = $_GET['busqueda'] ?? '';
 
-        $productos = $this->model->obtenerTodos($busqueda);
+        $productos = $this->productoModel->obtenerTodos($busqueda);
         $categorias = $this->categoriaModel->obtenerTodas();
-        require '../app/vista/producto/index.php';
+        ViewHelper::render('producto/index', ['productos' => $productos, 'busqueda' => $busqueda]);
     }
 
     public function editar($id)
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         if (!$id) {
             echo "ID no proporcionado";
             exit;
         }
 
         // Obtener el producto desde ProductoModel
-        $producto = $this->model->obtenerPorId($id);
+        $producto = $this->productoModel->obtenerPorId($id);
         if (!$producto) {
             echo "Producto no encontrado.";
             exit;
         }
 
         // Instanciar CategoriaModel y obtener categorías
-        $db = Database::conectar(); // ✅ usa la misma conexión
-        $categoriaModel = new CategoriaModel($db); // ✅ inyección de dependencia
+        $categoriaModel = new CategoriaModel($this->db); // ✅ inyección de dependencia
         $categorias = $categoriaModel->obtenerTodas();
 
         // Cargar la vista
@@ -47,6 +52,8 @@ class ProductoController
 
     public function insertar()
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre = $_POST['nombre'] ?? '';
             $descripcion = $_POST['descripcion'] ?? '';
@@ -58,7 +65,7 @@ class ProductoController
             $activo = isset($_POST['activo']) ? 1 : 0;
 
             if ($nombre !== '' && $precio_venta > 0 && $precio_compra >= 0 && $stock >= 0 && $stock_minimo >= 0) {
-                $this->model->insertar($nombre, $descripcion, $id_categoria, $precio_compra, $precio_venta, $stock, $stock_minimo, $activo);
+                $this->productoModel->insertar($nombre, $descripcion, $id_categoria, $precio_compra, $precio_venta, $stock, $stock_minimo, $activo);
                 header("Location:  " . URL_BASE . "/producto/index");
                 exit;
             } else {
@@ -69,11 +76,13 @@ class ProductoController
 
     public function cambiarEstado()
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id_producto'];
             $activo = isset($_POST['activo']) ? 1 : 0;
 
-            $this->model->cambiarEstado($id, $activo);
+            $this->productoModel->cambiarEstado($id, $activo);
             header("Location:  " . URL_BASE . "/producto/index");
             exit;
         }
@@ -81,6 +90,8 @@ class ProductoController
 
     public function actualizar()
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id_producto'];
             $nombre = $_POST['nombre'];
@@ -92,18 +103,20 @@ class ProductoController
             $stock_minimo = $_POST['stock_minimo'];
             $activo = isset($_POST['activo']) ? 1 : 0;
 
-            $this->model->actualizar($id, $nombre, $descripcion, $id_categoria, $precio_compra, $precio_venta, $stock, $stock_minimo);
+            $this->productoModel->actualizar($id, $nombre, $descripcion, $id_categoria, $precio_compra, $precio_venta, $stock, $stock_minimo);
             header("Location:  " . URL_BASE . "/producto/index");
         }
     }
 
     public function eliminar($id)
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         if (!$id) {
             echo "ID no proporcionado";
             exit;
         }
-        $producto = $this->model->eliminar($id);
+        $producto = $this->productoModel->eliminar($id);
         header("Location:  " . URL_BASE . "/producto/index");
     }
 }

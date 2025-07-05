@@ -1,11 +1,10 @@
 <?php
-if (session_status() === PHP_SESSION_NONE)
-    session_start();
-$tema = $_COOKIE['tema'] ?? 'light';
+$tema = $_COOKIE['tema'] ?? 'light'; // ✅ Siempre definido
 $claseBody = $tema === 'dark' ? 'bg-dark text-light' : '';
 ?>
+
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="<?= htmlspecialchars($tema) ?>">
 <?php require_once 'head.php'; ?>
 
 <body class="<?= $claseBody ?>">
@@ -21,6 +20,12 @@ $claseBody = $tema === 'dark' ? 'bg-dark text-light' : '';
     if (in_array($archivoContenido, ['compra_contenido.php', 'venta_contenido.php'])):
         ?>
         <script src="<?= URL_BASE ?>/js/venta_compra.js"></script>
+    <?php endif; ?>
+    <?php
+    $archivoContenido = basename($contenido ?? '');
+    if ($archivoContenido === 'inicio.php'): // o cualquier archivo donde se use el sidebar
+        ?>
+        <script src="<?= URL_BASE ?>/js/sidebar.js"></script>
     <?php endif; ?>
 
 </body>

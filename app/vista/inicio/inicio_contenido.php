@@ -1,6 +1,7 @@
 <!-- Saludo -->
 <div class="mb-4">
-    <h5 id="saludo">Bienvenido <?= htmlspecialchars($_SESSION['nombre_usuario'] ?? 'Usuario') ?>. Hoy es <span
+    <?php $usuario = AuthHelper::getUsuario(); ?>
+    <h5 id="saludo">Bienvenido <?= htmlspecialchars($usuario['nombre_completo'] ?? 'Usuario') ?>. Hoy es <span
             id="fecha"></span></h5>
 </div>
 
@@ -11,8 +12,10 @@
         <div class="mb-4">
             <div class="card shadow">
                 <div class="card-body">
-                    <h6><i class="bi bi-people-fill text-primary me-2"></i> Ventas por usuario (Top)</h6>
-                    <canvas id="chartVentasUsuario"></canvas>
+                    <h6>
+                        <i class="bi bi-currency-exchange text-warning"></i> Productos con más ingresos
+                    </h6>
+                    <canvas id="chartProductosRentables"></canvas>
                 </div>
             </div>
         </div>
@@ -23,7 +26,7 @@
         <div class="mb-4">
             <div class="card shadow">
                 <div class="card-body">
-                    <h6><i class="bi bi-graph-up-arrow text-secondary me-2"></i> Ventas mensuales (Año actual)</h6>
+                    <h6><i class="bi bi-graph-up-arrow text-secondary me-2"></i> Ventas mensuales</h6>
                     <canvas id="chartVentasMes"></canvas>
                 </div>
             </div>
@@ -77,6 +80,19 @@
         </div>
     </article>
 
+    <!-- Stock bajo -->
+    <article>
+        <div class="mb-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h6>
+                        Productos con bajo stock<i class="bi bi-exclamation-triangle-fill text-danger ms-2"></i>
+                    </h6>
+                    <canvas id="chartStockBajo"></canvas>
+                </div>
+            </div>
+        </div>
+    </article>
 
     <!-- Stock bajo -->
     <article>
@@ -84,23 +100,24 @@
             <div class="card shadow">
                 <div class="card-body">
                     <h6>
-                        <i class="bi bi-box-seam"></i> Productos con bajo stock
-                        <i class="bi bi-exclamation-triangle-fill text-danger ms-2"></i>
+                        Valor de inventario<i class="bi bi-cash ms-2"></i>
                     </h6>
-                    <canvas id="chartStockBajo"></canvas>
+                    <canvas id="chartValorInventario"></canvas>
                 </div>
             </div>
         </div>
     </article>
+
+
 </div> <?php include_once(__DIR__ . '/../layout/footer.php'); ?></div>
 
 <?php include_once(__DIR__ . '/../layout/footer.php'); ?>
 
 <script>
     window.dashboardData = {
-        ventasPorUsuario: {
-            labels: <?= json_encode([$usuarioTop['nombre_usuario']]) ?>,
-            data: <?= json_encode([(int) $usuarioTop['total_ventas']]) ?>
+        productosMasRentables: {
+            labels: <?= json_encode(array_column($productosRentables, 'nombre')) ?>,
+            data: <?= json_encode(array_map('floatval', array_column($productosRentables, 'ingresos'))) ?>
         },
         productosMasVendidos: {
             labels: <?= json_encode(array_column($productoTop, 'nombre')) ?>,
@@ -122,7 +139,9 @@
             labels: <?= json_encode(["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]) ?>,
             data: <?= json_encode($comprasPorMes) ?>
         },
-        productosStockBajo: <?= json_encode($productosBajoStock) ?>
+        productosStockBajo: <?= json_encode($productosBajoStock) ?>,
+        valorInventarioCompra: <?= $valorInventarioCompra['valor_compra'] ?? 0 ?>,
+        valorInventarioVenta: <?= $valorInventarioVenta['valor_venta'] ?? 0 ?>
 
     };
 </script>

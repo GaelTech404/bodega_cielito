@@ -1,13 +1,10 @@
 <?php
-if (session_status() === PHP_SESSION_NONE)
-    session_start();
-
 // Detectar tema desde cookie (o fallback a 'light')
 $tema = $_COOKIE['tema'] ?? 'light';
 $claseBody = $tema === 'dark' ? 'dark bg-dark text-light' : '';
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="<?= htmlspecialchars($tema) ?>">
 
 <head>
     <meta charset="UTF-8">

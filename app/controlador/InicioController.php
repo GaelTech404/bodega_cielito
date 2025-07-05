@@ -2,34 +2,37 @@
 
 class InicioController
 {
+    private $db;
+
     public function index()
     {
-        $db = Database::conectar();
+        AuthHelper::verificarAcceso();
 
-        $ventaModel = new VentaModel($db);
-        $dashboardModel = new DashboardModel($db);
+        $this->db = Database::conectar();
 
-        $usuarioTop = $dashboardModel->obtenerUsuarioConMasVentas();
-        $ventasMes = $dashboardModel->obtenerTotalVentasMesActual();
-        $ultimaVenta = $dashboardModel->obtenerUltimaVentaConProducto();
+        $dashboardModel = new DashboardModel($this->db);
+
+        $productosRentables = $dashboardModel->obtenerProductosMasRentables();
         $productoTop = $dashboardModel->obtenerProductoMasVendido();
         $productosBajoStock = $dashboardModel->obtenerProductosConStockBajo();
         $ventasPorMes = $dashboardModel->obtenerVentasPorMes();
         $topVendedores = $dashboardModel->obtenerTopVendedores();
         $ventasPorCategoria = $dashboardModel->obtenerVentasPorCategoria();
         $comprasPorMes = $dashboardModel->obtenerComprasPorMes();
+        $valorInventarioCompra = $dashboardModel->obtenerValorTotalInventarioCompra();
+        $valorInventarioVenta = $dashboardModel->obtenerValorTotalInventarioVenta();
 
         // Pasamos todos los datos a la vista
         $data = compact(
-            'usuarioTop',
-            'ventasMes',
-            'ultimaVenta',
+            'productosRentables',
             'productoTop',
             'productosBajoStock',
             'ventasPorMes',
             'topVendedores',
             'ventasPorCategoria',
-            'comprasPorMes'
+            'comprasPorMes',
+            'valorInventarioCompra',
+            'valorInventarioVenta'
         );
 
         extract($data); // convierte claves del array en variables para la vista

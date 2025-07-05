@@ -3,23 +3,30 @@
 class UsuarioController
 {
     private $model;
+    private $db;
 
     public function __construct()
     {
-        $db = Database::conectar(); // ✅ Conexión única
-        $this->model = new UsuarioModel($db);
+        AuthHelper::verificarAcceso();
+
+        $this->db = Database::conectar(); // ✅ solo una vez
+
+        $this->model = new UsuarioModel($this->db);
     }
 
     public function index()
     {
+
         $busqueda = $_GET['busqueda'] ?? '';
         $usuarios = $this->model->obtenerTodos($busqueda);
 
-        require '../app/vista/usuario/index.php';
+        ViewHelper::render('usuario/index', ['usuarios' => $usuarios, 'busqueda' => $busqueda]);
     }
 
     public function editar($id)
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         if (!$id) {
             echo "ID no proporcionado";
             exit;
@@ -31,6 +38,8 @@ class UsuarioController
 
     public function actualizar()
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         $id = $_POST['id_usuario'];
         $nombre_usuario = $_POST['nombre_usuario'];
         $nombre_completo = $_POST['nombre_completo'];
@@ -45,6 +54,8 @@ class UsuarioController
 
     public function eliminar($id)
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         if (!$id) {
             echo "ID no proporcionado";
             exit;
@@ -57,6 +68,8 @@ class UsuarioController
 
     public function insertar()
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre_usuario = $_POST['nombre_usuario'] ?? '';
             $nombre_completo = $_POST['nombre_completo'] ?? '';
@@ -73,5 +86,5 @@ class UsuarioController
             }
         }
     }
-    
+
 }

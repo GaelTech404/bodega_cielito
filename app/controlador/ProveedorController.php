@@ -3,12 +3,13 @@
 class ProveedorController
 {
     private $model;
-
+    private $db;
     public function __construct()
     {
+        AuthHelper::verificarAcceso();
 
-        $db = Database::conectar(); // ✅ Conexión única
-        $this->model = new ProveedorModel($db); // ✅ Inyectar conexión
+        $this->db = Database::conectar();
+        $this->model = new ProveedorModel($this->db); // ✅ Inyectar conexión
     }
 
     public function index()
@@ -16,11 +17,13 @@ class ProveedorController
         $busqueda = $_GET['busqueda'] ?? '';
         $proveedores = $this->model->obtenerTodos($busqueda);
 
-        require '../app/vista/proveedor/index.php';
+        ViewHelper::render('proveedor/index', ['proveedores' => $proveedores, 'busqueda' => $busqueda]);
     }
 
     public function editar($id)
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         if (!$id) {
             echo "ID no proporcionado";
             exit;
@@ -32,6 +35,8 @@ class ProveedorController
 
     public function insertar()
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre = $_POST['nombre'] ?? '';
             $ruc = $_POST['ruc'] ?? '';
@@ -51,6 +56,8 @@ class ProveedorController
 
     public function actualizar()
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         $id = $_POST['id_proveedor'];
         $nombre = $_POST['nombre'];
         $ruc = $_POST['ruc'];
@@ -64,6 +71,8 @@ class ProveedorController
 
     public function eliminar($id)
     {
+        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+
         if (!$id) {
             echo "ID no proporcionado";
             exit;

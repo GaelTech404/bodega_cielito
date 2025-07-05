@@ -1,30 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
     if (!window.dashboardData) return;
-
     const {
-        ventasPorUsuario,
         productosMasVendidos,
         ventasPorMes,
         topVendedores,
         ventasPorCategoria,
         comprasPorMes,
-        productosStockBajo
+        productosStockBajo,
+        productosMasRentables // ← ESTE FALTABA
+
     } = window.dashboardData;
 
-    if (
-        ventasPorUsuario?.labels?.length &&
-        ventasPorUsuario?.data?.length &&
-        productosMasVendidos?.labels?.length &&
-        productosMasVendidos?.data?.length
-    ) {
-        crearGraficoBar('chartVentasUsuario', ventasPorUsuario.labels, ventasPorUsuario.data);
-        crearGraficoBar('chartProductosMasVendidos', productosMasVendidos.labels, productosMasVendidos.data);
-        crearGraficoLineAvanzado('chartVentasMes', ventasPorMes.labels, ventasPorMes.data);
-        crearGraficoBar('chartTopVendedores', topVendedores.labels, topVendedores.data);
-        crearGraficoDoughnut('chartVentasCategoria', ventasPorCategoria.labels, ventasPorCategoria.data);
-        crearGraficoLine('chartComprasMes', comprasPorMes.labels, comprasPorMes.data);
-        crearGraficoStockBajo('chartStockBajo', productosStockBajo);
-    }
+
+    crearGraficoBarHorizontal('chartProductosMasVendidos', productosMasVendidos.labels, productosMasVendidos.data);
+    crearGraficoLineAvanzado('chartVentasMes', ventasPorMes.labels, ventasPorMes.data);
+    crearGraficoBar('chartTopVendedores', topVendedores.labels, topVendedores.data);
+    crearGraficoDoughnut('chartVentasCategoria', ventasPorCategoria.labels, ventasPorCategoria.data);
+    crearGraficoLineAvanzado('chartComprasMes', comprasPorMes.labels, comprasPorMes.data);
+    crearGraficoStockBajo('chartStockBajo', productosStockBajo);
+    crearGraficoBar('chartProductosRentables', productosMasRentables.labels, productosMasRentables.data);
+    crearGraficoBar(
+        'chartValorInventario',
+        ['Valor Compra', 'Valor Venta'],
+        [window.dashboardData.valorInventarioCompra, window.dashboardData.valorInventarioVenta]
+    );
+
+
 });
 
 function crearGraficoBar(id, labels, data) {
@@ -103,23 +104,6 @@ function crearGraficoDoughnut(id, etiquetas, valores, titulo = 'Distribución') 
     new Chart(document.getElementById(id), config);
 }
 
-
-function crearGraficoLine(id, labels, data) {
-    new Chart(document.getElementById(id), {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Ventas por mes',
-                data: data,
-                fill: false,
-                borderColor: 'rgb(55, 255, 115)',
-                tension: 0.1
-            }]
-        },
-        options: { responsive: true }
-    });
-}
 function crearGraficoLineAvanzado(id, labels, data) {
     function skipped(ctx, value) {
         return ctx.p0.skip || ctx.p1.skip ? value : undefined;
@@ -162,6 +146,32 @@ function crearGraficoLineAvanzado(id, labels, data) {
         }
     });
 }
+function crearGraficoBarHorizontal(idCanvas, labels, data) {
+    const ctx = document.getElementById(idCanvas).getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Cantidad vendida',
+                data,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y', // 🔁 esto invierte los ejes
+            responsive: true,
+            scales: {
+                x: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
 function crearGraficoStockBajo(id, productos) {
     const labels = productos.map(p => p.nombre);
     const stocks = productos.map(p => parseInt(p.stock));
@@ -186,6 +196,7 @@ function crearGraficoStockBajo(id, productos) {
         options: {
             responsive: true,
             indexAxis: 'y',
+
             plugins: {
                 legend: { display: false },
                 tooltip: {
