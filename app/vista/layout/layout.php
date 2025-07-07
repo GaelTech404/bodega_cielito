@@ -1,5 +1,5 @@
 <?php
-$tema = $_COOKIE['tema'] ?? 'light'; // ✅ Siempre definido
+$tema = $_COOKIE['tema'] ?? 'light'; 
 $claseBody = $tema === 'dark' ? 'bg-dark text-light' : '';
 ?>
 
@@ -10,7 +10,7 @@ $claseBody = $tema === 'dark' ? 'bg-dark text-light' : '';
 <body class="<?= $claseBody ?>">
     <div class="d-flex">
         <?php require_once 'sidebar.php'; ?>
-        <div class="flex-grow-1 p-3">
+        <div class="contenido-principal flex-grow-1 p-3">
             <?php require $contenido; ?>
         </div>
     </div>
@@ -21,12 +21,8 @@ $claseBody = $tema === 'dark' ? 'bg-dark text-light' : '';
         ?>
         <script src="<?= URL_BASE ?>/js/venta_compra.js"></script>
     <?php endif; ?>
-    <?php
-    $archivoContenido = basename($contenido ?? '');
-    if ($archivoContenido === 'inicio.php'): // o cualquier archivo donde se use el sidebar
-        ?>
-        <script src="<?= URL_BASE ?>/js/sidebar.js"></script>
-    <?php endif; ?>
+    <script src="<?= URL_BASE ?>/js/menu_desplegable.js"></script>
+
 
 </body>
 

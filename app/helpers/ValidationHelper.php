@@ -1,7 +1,6 @@
 <?php
 class ValidationHelper
 {
-    // Elimina espacios, etiquetas y convierte caracteres especiales
     public static function limpiar($dato): string
     {
         return htmlspecialchars(trim(strip_tags($dato)), ENT_QUOTES, 'UTF-8');

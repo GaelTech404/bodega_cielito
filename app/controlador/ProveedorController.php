@@ -9,7 +9,7 @@ class ProveedorController
         AuthHelper::verificarAcceso();
 
         $this->db = Database::conectar();
-        $this->model = new ProveedorModel($this->db); // ✅ Inyectar conexión
+        $this->model = new ProveedorModel($this->db); 
     }
 
     public function index()
@@ -22,7 +22,7 @@ class ProveedorController
 
     public function editar($id)
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if (!$id) {
             echo "ID no proporcionado";
@@ -35,7 +35,7 @@ class ProveedorController
 
     public function insertar()
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre = $_POST['nombre'] ?? '';
@@ -56,7 +56,7 @@ class ProveedorController
 
     public function actualizar()
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         $id = $_POST['id_proveedor'];
         $nombre = $_POST['nombre'];
@@ -71,7 +71,7 @@ class ProveedorController
 
     public function eliminar($id)
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if (!$id) {
             echo "ID no proporcionado";

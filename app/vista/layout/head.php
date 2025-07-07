@@ -1,5 +1,4 @@
 <?php
-// Detectar tema desde cookie (o fallback a 'light')
 $tema = $_COOKIE['tema'] ?? 'light';
 $claseBody = $tema === 'dark' ? 'dark bg-dark text-light' : '';
 ?>
@@ -16,7 +15,6 @@ $claseBody = $tema === 'dark' ? 'dark bg-dark text-light' : '';
     <link rel="stylesheet" href="<?= URL_BASE ?>/librerias/bootstrap/css/bootstrap.min.css">
     <script src="<?= URL_BASE ?>/librerias/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-
     <!-- Estilos comunes -->
     <link rel="stylesheet" href="<?= URL_BASE ?>/css/base.css">
     <link rel="stylesheet" href="<?= URL_BASE ?>/css/navbar.css">
@@ -24,7 +22,9 @@ $claseBody = $tema === 'dark' ? 'dark bg-dark text-light' : '';
     <link rel="stylesheet" href="<?= URL_BASE ?>/css/animaciones.css">
     <link rel="stylesheet" href="<?= URL_BASE ?>/css/sidebar.css">
     <link rel="stylesheet" href="<?= URL_BASE ?>/css/tema.css">
+    <link rel="stylesheet" href="<?= URL_BASE ?>/css/desplegable.css">
 
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="<?= URL_BASE ?>/js/chart.js"></script>
+
 </head>

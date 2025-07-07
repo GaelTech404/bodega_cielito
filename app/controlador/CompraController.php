@@ -56,7 +56,7 @@ class CompraController
 
     public function editar($id)
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if (!$id) {
             echo "ID no proporcionado";
@@ -77,7 +77,7 @@ class CompraController
 
     public function insertar()
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id_proveedor = $_POST['id_proveedor'] ?? '';
@@ -112,7 +112,7 @@ class CompraController
 
     public function actualizar()
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         $id = $_POST['id_compra'] ?? '';
         $id_proveedor = $_POST['id_proveedor'] ?? '';
@@ -131,7 +131,7 @@ class CompraController
 
     public function eliminar($id)
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if (!$id) {
             echo "ID no proporcionado";

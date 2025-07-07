@@ -14,7 +14,7 @@ class SessionHelper
 
     public static function destroy()
     {
-        $_SESSION = []; // Limpia el arreglo por seguridad
+        $_SESSION = []; 
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
             setcookie(

@@ -74,18 +74,6 @@ canvas {
     min-height: 100vh;
 }
 
-.sidebar {
-    width: 280px;
-    background: rgb(255, 221, 221);
-    color: #1f2937;
-    padding: 24px;
-    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-right: 1px solid rgba(0, 0, 0, 0.05);
-}
-
 .sidebar-logo {
     max-width: 70%;
     height: auto;

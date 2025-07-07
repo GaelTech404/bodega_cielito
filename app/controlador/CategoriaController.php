@@ -8,9 +8,9 @@ class CategoriaController
     {
         AuthHelper::verificarAcceso();
 
-        $this->db = Database::conectar(); // ✅ solo una vez
+        $this->db = Database::conectar(); 
 
-        $this->model = new CategoriaModel($this->db); // ✅ Inyectar conexión
+        $this->model = new CategoriaModel($this->db); 
     }
 
     public function index()
@@ -23,7 +23,7 @@ class CategoriaController
 
     public function editar($id)
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if (!$id) {
             echo "ID no proporcionado";
@@ -42,7 +42,7 @@ class CategoriaController
 
     public function insertar()
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre = $_POST['nombre'] ?? '';
@@ -60,7 +60,7 @@ class CategoriaController
 
     public function actualizar()
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         $id = $_POST['id_categoria'];
         $nombre = $_POST['nombre'];
@@ -72,7 +72,7 @@ class CategoriaController
 
     public function eliminar($id)
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin');
 
         if (!$id) {
             echo "ID no proporcionado";

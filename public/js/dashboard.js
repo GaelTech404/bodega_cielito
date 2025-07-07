@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ventasPorCategoria,
         comprasPorMes,
         productosStockBajo,
-        productosMasRentables // ← ESTE FALTABA
+        productosMasRentables 
 
     } = window.dashboardData;
 
@@ -57,7 +57,20 @@ function crearGraficoBar(id, labels, data) {
         options: {
             responsive: true,
             plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } }
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        // Fuerza que solo se muestren enteros
+                        callback: function (value) {
+                            if (Number.isInteger(value)) {
+                                return value;
+                            }
+                        },
+                        stepSize: 10 // Opcional: incrementos de 1 en el eje Y
+                    }
+                }
+            }
         }
     });
 }
@@ -135,7 +148,7 @@ function crearGraficoLineAvanzado(id, labels, data) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Ventas mensuales con saltos y caídas destacadas'
+                    text: 'Ventas por mes y caidas',
                 }
             },
             scales: {
@@ -161,7 +174,7 @@ function crearGraficoBarHorizontal(idCanvas, labels, data) {
             }]
         },
         options: {
-            indexAxis: 'y', // 🔁 esto invierte los ejes
+            indexAxis: 'y', 
             responsive: true,
             scales: {
                 x: {

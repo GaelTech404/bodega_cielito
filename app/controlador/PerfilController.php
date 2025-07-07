@@ -23,7 +23,7 @@ class PerfilController
     }
     public function guardarTema()
     {
-        $tema = $_POST['tema'] ?? 'light'; // Valor por defecto
+        $tema = $_POST['tema'] ?? 'light'; 
 
         if (in_array($tema, ['light', 'dark', 'system'])) {
             $_SESSION['tema'] = $tema;

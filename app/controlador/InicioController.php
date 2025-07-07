@@ -22,7 +22,6 @@ class InicioController
         $valorInventarioCompra = $dashboardModel->obtenerValorTotalInventarioCompra();
         $valorInventarioVenta = $dashboardModel->obtenerValorTotalInventarioVenta();
 
-        // Pasamos todos los datos a la vista
         $data = compact(
             'productosRentables',
             'productoTop',
@@ -35,7 +34,7 @@ class InicioController
             'valorInventarioVenta'
         );
 
-        extract($data); // convierte claves del array en variables para la vista
+        extract($data);
 
         require_once '../app/vista/inicio/inicio.php';
     }

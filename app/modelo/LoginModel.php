@@ -9,6 +9,6 @@ class LoginModel extends ModelBase
         $stmt->bind_param("s", $nombre_usuario);
         $stmt->execute();
         $resultado = $stmt->get_result();
-        return $resultado->fetch_assoc(); // Devuelve null si no hay resultado
+        return $resultado->fetch_assoc(); 
     }
 }

@@ -9,7 +9,7 @@ class ProductoController
     {
         AuthHelper::verificarAcceso();
 
-        $this->db = Database::conectar(); // ✅ solo una vez
+        $this->db = Database::conectar(); 
 
         $this->productoModel = new ProductoModel($this->db);
         $this->categoriaModel = new CategoriaModel($this->db);
@@ -23,36 +23,33 @@ class ProductoController
 
         $productos = $this->productoModel->obtenerTodos($busqueda);
         $categorias = $this->categoriaModel->obtenerTodas();
-        ViewHelper::render('producto/index', ['productos' => $productos, 'busqueda' => $busqueda]);
+        ViewHelper::render('producto/index', ['productos' => $productos, 'categorias' => $categorias, 'busqueda' => $busqueda]);
     }
 
     public function editar($id)
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if (!$id) {
             echo "ID no proporcionado";
             exit;
         }
 
-        // Obtener el producto desde ProductoModel
         $producto = $this->productoModel->obtenerPorId($id);
         if (!$producto) {
             echo "Producto no encontrado.";
             exit;
         }
 
-        // Instanciar CategoriaModel y obtener categorías
-        $categoriaModel = new CategoriaModel($this->db); // ✅ inyección de dependencia
+        $categoriaModel = new CategoriaModel($this->db); 
         $categorias = $categoriaModel->obtenerTodas();
 
-        // Cargar la vista
         require '../app/vista/producto/form_editar.php';
     }
 
     public function insertar()
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre = $_POST['nombre'] ?? '';
@@ -76,7 +73,7 @@ class ProductoController
 
     public function cambiarEstado()
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id_producto'];
@@ -90,7 +87,7 @@ class ProductoController
 
     public function actualizar()
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id_producto'];
@@ -110,7 +107,7 @@ class ProductoController
 
     public function eliminar($id)
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if (!$id) {
             echo "ID no proporcionado";

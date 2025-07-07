@@ -50,13 +50,13 @@ class CompraModel extends ModelBase
         $con->begin_transaction();
 
         try {
-            // 1. Insertar la compra con total 0
+            // Insertar la compra con total 0
             $stmt = $con->prepare("INSERT INTO compras (id_proveedor, id_usuario, fecha_compra, total, estado) VALUES (?, ?, ?, 0, ?)");
             $stmt->bind_param("iiss", $id_proveedor, $id_usuario, $fecha_compra, $estado);
             $stmt->execute();
             $id_compra = $stmt->insert_id;
 
-            // 2. Insertar cada detalle de compra y actualizar stock
+            // Insertar cada detalle de compra y actualizar stock
             $total = 0;
             for ($i = 0; $i < count($productos); $i++) {
                 $id_producto = $productos[$i];
@@ -77,7 +77,7 @@ class CompraModel extends ModelBase
                 $total += $subtotal;
             }
 
-            // 3. Actualizar total en la compra
+            // Actualizar total en la compra
             $stmtTotal = $con->prepare("UPDATE compras SET total = ? WHERE id_compra = ?");
             $stmtTotal->bind_param("di", $total, $id_compra);
             $stmtTotal->execute();

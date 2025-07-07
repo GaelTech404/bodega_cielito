@@ -1,116 +1,51 @@
+<?php ob_start(); ?>
+
 <!-- Saludo -->
 <div class="mb-4">
     <?php $usuario = AuthHelper::getUsuario(); ?>
-    <h5 id="saludo">Bienvenido <?= htmlspecialchars($usuario['nombre_completo'] ?? 'Usuario') ?>. Hoy es <span
-            id="fecha"></span></h5>
+    <h5 id="saludo">
+        Bienvenido <?= htmlspecialchars($usuario['nombre_completo'] ?? 'Usuario') ?>. Hoy es <span id="fecha"></span>
+    </h5>
 </div>
 
 <!-- Carrusel -->
 <div class="carousel" mask>
-    <!-- Gráfico de ventas por usuario -->
-    <article>
-        <div class="mb-4">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h6>
-                        <i class="bi bi-currency-exchange text-warning"></i> Productos con más ingresos
-                    </h6>
-                    <canvas id="chartProductosRentables"></canvas>
+
+    <?php
+    // Lista de gráficos y sus configuraciones
+    $graficos = [
+        ['id' => 'chartProductosRentables', 'titulo' => 'Productos con más ingresos', 'icono' => 'currency-exchange text-warning'],
+        ['id' => 'chartVentasMes', 'titulo' => 'Ventas mensuales', 'icono' => 'graph-up-arrow text-secondary'],
+        ['id' => 'chartComprasMes', 'titulo' => 'Compras mensuales', 'icono' => 'cart-check-fill text-success'],
+        ['id' => 'chartTopVendedores', 'titulo' => 'Top vendedores', 'icono' => 'award-fill text-warning'],
+        ['id' => 'chartVentasCategoria', 'titulo' => 'Ventas por categoría', 'icono' => 'pie-chart-fill text-info'],
+        ['id' => 'chartProductosMasVendidos', 'titulo' => 'Productos más vendidos', 'icono' => 'bar-chart-fill text-primary'],
+        ['id' => 'chartStockBajo', 'titulo' => 'Productos con bajo stock', 'icono' => 'exclamation-triangle-fill text-danger'],
+        ['id' => 'chartValorInventario', 'titulo' => 'Valor de inventario', 'icono' => 'cash']
+    ];
+    ?>
+
+    <?php foreach ($graficos as $grafico): ?>
+        <article>
+            <div class="mb-4">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h6>
+                            <i class="bi bi-<?= $grafico['icono'] ?> me-2"></i> <?= $grafico['titulo'] ?>
+                        </h6>
+                        <canvas id="<?= $grafico['id'] ?>"></canvas>
+                    </div>
                 </div>
             </div>
-        </div>
-    </article>
+        </article>
+    <?php endforeach; ?>
 
-    <!-- Gráfico de ventas mensuales -->
-    <article>
-        <div class="mb-4">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h6><i class="bi bi-graph-up-arrow text-secondary me-2"></i> Ventas mensuales</h6>
-                    <canvas id="chartVentasMes"></canvas>
-                </div>
-            </div>
-        </div>
-    </article>
+</div>
 
-    <!-- Compras mensuales -->
-    <article>
-        <div class="mb-4">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h6><i class="bi bi-cart-check-fill text-success me-2"></i> Compras mensuales</h6>
-                    <canvas id="chartComprasMes"></canvas>
-                </div>
-            </div>
-        </div>
-    </article>
+<?php $contenidoModulo = ob_get_clean(); ?>
+<?php include __DIR__ . '/../componentes/contenedor_general.php'; ?>
 
-    <!-- Top vendedores -->
-    <article>
-        <div class="mb-4">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h6><i class="bi bi-award-fill text-warning me-2"></i> Top vendedores</h6>
-                    <canvas id="chartTopVendedores"></canvas>
-                </div>
-            </div>
-        </div>
-    </article>
-
-    <!-- Ventas por categoría -->
-    <article>
-        <div class="mb-4">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h6><i class="bi bi-pie-chart-fill text-info me-2"></i> Ventas por categoría</h6>
-                    <canvas id="chartVentasCategoria"></canvas>
-                </div>
-            </div>
-        </div>
-    </article>
-    <!-- Productos más vendidos -->
-    <article>
-        <div class="mb-4">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h6><i class="bi bi-bar-chart-fill text-primary me-2"></i> Productos más vendidos</h6>
-                    <canvas id="chartProductosMasVendidos"></canvas>
-                </div>
-            </div>
-        </div>
-    </article>
-
-    <!-- Stock bajo -->
-    <article>
-        <div class="mb-4">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h6>
-                        Productos con bajo stock<i class="bi bi-exclamation-triangle-fill text-danger ms-2"></i>
-                    </h6>
-                    <canvas id="chartStockBajo"></canvas>
-                </div>
-            </div>
-        </div>
-    </article>
-
-    <!-- Stock bajo -->
-    <article>
-        <div class="mb-4">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h6>
-                        Valor de inventario<i class="bi bi-cash ms-2"></i>
-                    </h6>
-                    <canvas id="chartValorInventario"></canvas>
-                </div>
-            </div>
-        </div>
-    </article>
-
-
-</div> <?php include_once(__DIR__ . '/../layout/footer.php'); ?></div>
-
+<!-- Footer y scripts -->
 <?php include_once(__DIR__ . '/../layout/footer.php'); ?>
 
 <script>
@@ -142,7 +77,6 @@
         productosStockBajo: <?= json_encode($productosBajoStock) ?>,
         valorInventarioCompra: <?= $valorInventarioCompra['valor_compra'] ?? 0 ?>,
         valorInventarioVenta: <?= $valorInventarioVenta['valor_venta'] ?? 0 ?>
-
     };
 </script>
 

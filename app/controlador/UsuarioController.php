@@ -9,7 +9,7 @@ class UsuarioController
     {
         AuthHelper::verificarAcceso();
 
-        $this->db = Database::conectar(); // ✅ solo una vez
+        $this->db = Database::conectar(); 
 
         $this->model = new UsuarioModel($this->db);
     }
@@ -25,7 +25,7 @@ class UsuarioController
 
     public function editar($id)
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if (!$id) {
             echo "ID no proporcionado";
@@ -38,7 +38,7 @@ class UsuarioController
 
     public function actualizar()
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         $id = $_POST['id_usuario'];
         $nombre_usuario = $_POST['nombre_usuario'];
@@ -54,7 +54,7 @@ class UsuarioController
 
     public function eliminar($id)
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if (!$id) {
             echo "ID no proporcionado";
@@ -68,7 +68,7 @@ class UsuarioController
 
     public function insertar()
     {
-        AuthHelper::verificarRol('admin'); // ✅ Solo admin
+        AuthHelper::verificarRol('admin'); 
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre_usuario = $_POST['nombre_usuario'] ?? '';

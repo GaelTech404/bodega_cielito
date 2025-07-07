@@ -79,7 +79,7 @@ class VentaModel extends ModelBase
         $con->begin_transaction();
 
         try {
-            // 1. Insertar la venta con total 0
+            // Insertar la venta con total 0
             $stmt = $con->prepare("INSERT INTO ventas (id_usuario, fecha_venta, total, estado) VALUES (?, ?, 0, ?)");
             $stmt->bind_param("iss", $id_usuario, $fecha_venta, $estado);
             $stmt->execute();
@@ -87,7 +87,7 @@ class VentaModel extends ModelBase
 
             $total = 0;
 
-            // 2. Insertar cada detalle de venta y actualizar stock
+            // Insertar cada detalle de venta y actualizar stock
             for ($i = 0; $i < count($productos); $i++) {
                 $id_producto = $productos[$i];
                 $cantidad = $cantidades[$i];
@@ -118,7 +118,7 @@ class VentaModel extends ModelBase
                 $total += $subtotal;
             }
 
-            // 3. Actualizar total de la venta
+            // Actualizar total de la venta
             $stmtTotal = $con->prepare("UPDATE ventas SET total = ? WHERE id_venta = ?");
             $stmtTotal->bind_param("di", $total, $id_venta);
             $stmtTotal->execute();

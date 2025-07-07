@@ -20,7 +20,7 @@
             <input type="password" name="contraseña" class="form-control" placeholder="Contraseña" required>
         </div>
         <div class="col-md-1">
-            <button type="submit" class="btn btn-success w-100">Agregar</button>
+            <button type="submit" class="btn btn-success">Agregar</button>
         </div>
     </div>
 </form>

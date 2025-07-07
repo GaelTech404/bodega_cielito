@@ -24,7 +24,7 @@ class VentaController
         $id_usuario = $usuario['id_usuario'];
         $busqueda = $_GET['busqueda'] ?? '';
 
-        // ✅ Si es admin, puede ver todas las ventas
+        // admin = puede ver todas las ventas
         if ($rol === 'admin') {
             $ventas = $this->ventaModel->obtenerVentasConUsuarios($busqueda);
         } else {
@@ -54,7 +54,7 @@ class VentaController
             exit;
         }
 
-        // ✅ Solo dueño o admin puede verla
+        // Solo admin puede verla la venta o el usuario que la creó
         $usuario = AuthHelper::getUsuario();
         if ($usuario['rol'] !== 'admin' && $venta['id_usuario'] !== $usuario['id_usuario']) {
             RedirectHelper::to(URL_BASE . '/venta/index', '⛔ No tiene acceso a esta venta.');

@@ -1,0 +1,125 @@
+/*  BASE SIDEBAR */
+.sidebar-custom {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 15rem;
+    height: 100%;
+    padding: 1.4rem 1rem;
+    transition: width 0.5s ease;
+    z-index: 1000;
+    border-right: 1px solid #dee2e6;
+
+}
+
+/* BOTON MENU */
+.menu-btn {
+    position: absolute;
+    top: 3.5%;
+    right: -0.87rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    box-shadow: 2px 2px 5px var(--shadow-border);
+    cursor: pointer;
+    transition: right 0.3s ease;
+}
+
+.menu-btn i {
+    font-size: 1.2rem;
+}
+
+.sidebar-custom.minimize .menu-btn {
+    rotate: 180deg;
+}
+
+/* CONTENIDO PRINCIPAL */
+.contenido-principal {
+    margin-left: 15rem;
+    transition: margin-left 0.3s ease;
+}
+
+.sidebar-custom.minimize+.contenido-principal {
+    margin-left: 0.5rem;
+}
+
+/* MINIMIZACIÓN */
+.sidebar-custom.minimize {
+    width: 4rem;
+}
+
+.sidebar-custom.minimize .texto-modulo,
+.sidebar-custom.minimize .dropdown .texto-modulo {
+    display: none;
+}
+
+
+.sidebar-custom.minimize .nav-link-custom,
+.sidebar-custom.minimize .dropdown .nav-link-custom,
+.sidebar-custom.minimize .logo-link {
+    justify-content: center;
+    text-align: center;
+}
+
+.sidebar-custom.minimize .dropdown-menu {
+    width: auto !important;
+    min-width: unset !important;
+    left: -0.5rem !important;
+    transform: translate(75%, -20%) !important;
+}
+
+.sidebar-custom.minimize .avatar-circle {
+    width: 22px;
+    height: 22px;
+}
+
+/* TOOLTIP GENERAL */
+.nav-link-custom::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 3.9rem;
+    top: 0.2rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 9999;
+    background-color: var(--hover-bg-light);
+    color: var(--text-light);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-custom.minimize .nav-link-custom:hover::after {
+    opacity: 1;
+
+}
+
+/* TOOLTIP DE PERFIL */
+
+.sidebar-custom.minimize #dropdownPerfil::after {
+    left: 3.4rem;
+    top: 0.2rem;
+}
+
+.sidebar-custom.minimize .dropdown-menu .nav-link-custom::after {
+    left: 4.4rem;
+    top: 0.2rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .sidebar-footer {
+        box-shadow: none;
+    }
+
+    .menu-container {
+        overflow-y: auto;
+    }
+}

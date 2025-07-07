@@ -2,7 +2,6 @@
 
 class ProductoModel extends ModelBase
 {
-    // Obtener todos los productos
     public function obtenerTodos(string $busqueda = ''): array
     {
         if (!$this->db) {
@@ -40,7 +39,6 @@ class ProductoModel extends ModelBase
     }
 
 
-
     public function obtenerPorId($id)
     {
         $stmt = $this->db->prepare("SELECT * FROM productos WHERE id_producto = ?");
@@ -64,7 +62,6 @@ class ProductoModel extends ModelBase
         SET nombre = ?, descripcion = ?, id_categoria = ?, precio_compra = ?, precio_venta = ?, stock = ?, stock_minimo = ?
         WHERE id_producto = ?");
 
-        // Tipos: s = string, i = integer, d = double (float)
         $stmt->bind_param("ssiddiii", $nombre, $descripcion, $id_categoria, $precio_compra, $precio_venta, $stock, $stock_minimo, $id);
 
         return $stmt->execute();
