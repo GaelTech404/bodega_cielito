@@ -1,5 +1,4 @@
 <?php
-
 class ProductoModel extends ModelBase
 {
     public function obtenerTodos(string $busqueda = ''): array

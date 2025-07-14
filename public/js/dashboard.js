@@ -131,7 +131,7 @@ function crearGraficoLineAvanzado(id, labels, data) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Ventas por mes',
+                label: 'mes',
                 data: data,
                 borderColor: 'rgb(75, 192, 192)',
                 spanGaps: true,
@@ -148,7 +148,7 @@ function crearGraficoLineAvanzado(id, labels, data) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Ventas por mes y caidas',
+                    text: 'Altas y Bajas de cada mes',
                 }
             },
             scales: {

@@ -1,5 +1,4 @@
 <?php
-
 class ProductoController
 {
     private $productoModel;
@@ -66,7 +65,7 @@ class ProductoController
                 header("Location:  " . URL_BASE . "/producto/index");
                 exit;
             } else {
-                echo "⚠️ Datos inválidos para crear producto.";
+                echo "Datos inválidos para crear producto.";
             }
         }
     }

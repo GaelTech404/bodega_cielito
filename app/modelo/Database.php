@@ -1,5 +1,4 @@
 <?php
-// app/modelo/Database.php
 
 class Database
 {
@@ -9,7 +8,7 @@ class Database
 
         if ($conn->connect_error) {
             error_log("Conexión fallida: " . $conn->connect_error);
-            die("❌ Error al conectar con la base de datos.");
+            die("Error al conectar con la base de datos.");
         }
 
         $conn->set_charset('utf8mb4');

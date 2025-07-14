@@ -21,7 +21,7 @@ class ViewHelper
         if (file_exists($rutaAbsoluta)) {
             require $rutaAbsoluta;
         } else {
-            echo "⚠️ Vista no encontrada: $rutaVista";
+            echo "Vista no encontrada: $rutaVista";
         }
     }
 }

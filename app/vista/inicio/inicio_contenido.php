@@ -10,9 +10,7 @@
 
 <!-- Carrusel -->
 <div class="carousel" mask>
-
     <?php
-    // Lista de gráficos y sus configuraciones
     $graficos = [
         ['id' => 'chartProductosRentables', 'titulo' => 'Productos con más ingresos', 'icono' => 'currency-exchange text-warning'],
         ['id' => 'chartVentasMes', 'titulo' => 'Ventas mensuales', 'icono' => 'graph-up-arrow text-secondary'],
@@ -39,46 +37,7 @@
             </div>
         </article>
     <?php endforeach; ?>
-
 </div>
 
 <?php $contenidoModulo = ob_get_clean(); ?>
-<?php include __DIR__ . '/../componentes/contenedor_general.php'; ?>
-
-<!-- Footer y scripts -->
-<?php include_once(__DIR__ . '/../layout/footer.php'); ?>
-
-<script>
-    window.dashboardData = {
-        productosMasRentables: {
-            labels: <?= json_encode(array_column($productosRentables, 'nombre')) ?>,
-            data: <?= json_encode(array_map('floatval', array_column($productosRentables, 'ingresos'))) ?>
-        },
-        productosMasVendidos: {
-            labels: <?= json_encode(array_column($productoTop, 'nombre')) ?>,
-            data: <?= json_encode(array_column($productoTop, 'total_vendidos')) ?>
-        },
-        ventasPorMes: {
-            labels: <?= json_encode(['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']) ?>,
-            data: <?= json_encode(array_values($ventasPorMes)) ?>
-        },
-        topVendedores: {
-            labels: <?= json_encode(array_column($topVendedores, 'nombre_usuario')) ?>,
-            data: <?= json_encode(array_column($topVendedores, 'total_ventas')) ?>
-        },
-        ventasPorCategoria: {
-            labels: <?= json_encode(array_column($ventasPorCategoria, 'categoria')) ?>,
-            data: <?= json_encode(array_column($ventasPorCategoria, 'total_vendidos')) ?>
-        },
-        comprasPorMes: {
-            labels: <?= json_encode(["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]) ?>,
-            data: <?= json_encode($comprasPorMes) ?>
-        },
-        productosStockBajo: <?= json_encode($productosBajoStock) ?>,
-        valorInventarioCompra: <?= $valorInventarioCompra['valor_compra'] ?? 0 ?>,
-        valorInventarioVenta: <?= $valorInventarioVenta['valor_venta'] ?? 0 ?>
-    };
-</script>
-
-<script src="<?= URL_BASE ?>/js/dashboard.js"></script>
-<script src="<?= URL_BASE ?>/js/saludo.js"></script>
+<?php include __DIR__ . '/../layout/contenedor_general.php'; ?>

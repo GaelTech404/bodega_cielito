@@ -1,9 +1,7 @@
 <?php
 include_once(__DIR__ . '/../layout/head.php');
 ?>
-<?php
-include_once(__DIR__ . '/../layout/navbar.php');
-?>
+
 <div class="container mt-5">
 
     <h3>Detalle de Venta #<?= htmlspecialchars($venta['id_venta']) ?></h3>

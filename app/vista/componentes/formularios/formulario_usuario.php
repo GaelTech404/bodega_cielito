@@ -7,7 +7,8 @@
             <input type="text" name="nombre_completo" class="form-control" placeholder="Nombre completo" required>
         </div>
         <div class="col-md-3">
-            <input type="email" name="correo" class="form-control" placeholder="Correo" required>
+            <input type="email" name="correo" class="form-control" placeholder="Correo" required
+                autocomplete="current-password">
         </div>
         <div class="col-auto">
             <select name="rol" class="form-select" required>
@@ -17,7 +18,8 @@
             </select>
         </div>
         <div class="col-md-2">
-            <input type="password" name="contraseña" class="form-control" placeholder="Contraseña" required>
+            <input type="password" name="contraseña" class="form-control" placeholder="Contraseña" required
+                autocomplete="current-password">
         </div>
         <div class="col-md-1">
             <button type="submit" class="btn btn-success">Agregar</button>

@@ -1,18 +1,3 @@
-/*  BASE SIDEBAR */
-.sidebar-custom {
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 15rem;
-    height: 100%;
-    padding: 1.4rem 1rem;
-    transition: width 0.5s ease;
-    z-index: 1000;
-    border-right: 1px solid #dee2e6;
-
-}
-
 /* BOTON MENU */
 .menu-btn {
     position: absolute;
@@ -91,7 +76,7 @@
     pointer-events: none;
     transition: opacity 0.2s ease;
     z-index: 9999;
-    background-color: var(--hover-bg-light);
+    background-color: var(--hover-bg);
     color: var(--text-light);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }

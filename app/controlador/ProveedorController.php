@@ -49,7 +49,7 @@ class ProveedorController
                 header("Location:  " . URL_BASE . "/proveedor/index");
                 exit;
             } else {
-                echo "⚠️ Datos inválidos para crear proveedor.";
+                echo "Datos inválidos para crear proveedor.";
             }
         }
     }

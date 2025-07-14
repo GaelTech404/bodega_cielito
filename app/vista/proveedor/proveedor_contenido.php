@@ -14,4 +14,4 @@
 <?php include __DIR__ . '/../componentes/tablas/tabla_proveedores.php'; ?>
 
 <?php $contenidoModulo = ob_get_clean(); ?>
-<?php include __DIR__ . '/../componentes/contenedor_general.php'; ?>
+<?php include __DIR__ . '/../layout/contenedor_general.php'; ?>

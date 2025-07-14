@@ -14,11 +14,13 @@ class DashboardModel extends ModelBase
         $result = $this->db->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+
     public function obtenerTopVendedores($limite = 5)
     {
         $sql = "SELECT u.nombre_usuario, COUNT(v.id_venta) AS total_ventas
             FROM ventas v
             INNER JOIN usuarios u ON v.id_usuario = u.id_usuario
+            WHERE u.nombre_usuario IS NOT NULL
             GROUP BY u.id_usuario
             ORDER BY total_ventas DESC
             LIMIT " . intval($limite);
@@ -37,6 +39,30 @@ class DashboardModel extends ModelBase
 
         $resultado = $this->db->query($sql);
 
+        return $resultado->fetch_all(MYSQLI_ASSOC);
+    }
+    public function obtenerProductosVendidosPorUsuario($id_usuario)
+    {
+        $sql = "SELECT p.nombre, dv.cantidad, dv.precio_unitario, v.fecha_venta
+            FROM ventas v
+            INNER JOIN detalle_venta dv ON v.id_venta = dv.id_venta
+            INNER JOIN productos p ON dv.id_producto = p.id_producto
+            WHERE v.id_usuario = ?
+            ORDER BY v.fecha_venta DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("i", $id_usuario);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+    public function obtenerProveedores()
+    {
+        $sql = "SELECT nombre, ruc, telefono, direccion, correo FROM proveedores";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
         return $resultado->fetch_all(MYSQLI_ASSOC);
     }
 
@@ -92,7 +118,7 @@ class DashboardModel extends ModelBase
         while ($row = $result->fetch_assoc()) {
             $meses[(int) $row['mes']] = (float) $row['total'];
         }
-        return array_values($meses);
+        return $meses;
     }
     public function obtenerValorTotalInventarioCompra()
     {

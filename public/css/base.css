@@ -13,10 +13,9 @@ body {
 }
 
 .footer {
-    text-align: center;
-    padding: 15px 0;
-    color: #6c757d;
-    font-size: 16px;
+    background-color: transparent;
+    color: var(--muted-light);
+    font-size: 0.9rem;
 }
 
 .container-left {
@@ -27,4 +26,33 @@ body {
 
 .resaltado {
     background-color: #ffff99;
+}
+
+@media (max-width: 768px) {
+    .tabla-stack thead {
+        display: none !important;
+    }
+
+    .tabla-stack tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+    }
+
+    .tabla-stack td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.4rem 0;
+        border: none !important;
+    }
+
+    .tabla-stack td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #888;
+        flex-basis: 50%;
+        text-align: left;
+    }
 }

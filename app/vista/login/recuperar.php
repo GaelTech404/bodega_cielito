@@ -30,7 +30,6 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
             <?php endif; ?>
 
             <input type="email" name="email" placeholder="Correo electrónico" required autofocus>
-            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
 
             <button type="submit">📧 Enviar enlace de recuperación</button>
 

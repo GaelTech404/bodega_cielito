@@ -102,10 +102,10 @@ class CompraController
                     header("Location:  " . URL_BASE . "/compra/index");
                     exit;
                 } catch (Exception $e) {
-                    echo "❌ Error al guardar: " . $e->getMessage();
+                    echo "Error al guardar: " . $e->getMessage();
                 }
             } else {
-                echo "⚠️ Faltan datos obligatorios.";
+                echo "Faltan datos obligatorios.";
             }
         }
     }

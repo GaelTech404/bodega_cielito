@@ -1,9 +1,5 @@
-<?php
-$tema = $_COOKIE['tema'] ?? 'light';
-$claseBody = $tema === 'dark' ? 'dark bg-dark text-light' : '';
-?>
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="<?= htmlspecialchars($tema) ?>">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">

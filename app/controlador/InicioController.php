@@ -36,6 +36,6 @@ class InicioController
 
         extract($data);
 
-        require_once '../app/vista/inicio/inicio.php';
+        require_once '../app/vista/inicio/index.php';
     }
 }

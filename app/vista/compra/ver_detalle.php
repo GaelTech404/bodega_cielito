@@ -1,9 +1,7 @@
 <?php
 include_once(__DIR__ . '/../layout/head.php');
 ?>
-<?php
-include_once(__DIR__ . '/../layout/navbar.php');
-?>
+
 <div class="container mt-5">
     <h3>Detalle de Compra #<?= htmlspecialchars($compra['id_compra']) ?></h3>
     <p><strong>Proveedor:</strong> <?= htmlspecialchars($compra['nombre_proveedor']) ?></p>

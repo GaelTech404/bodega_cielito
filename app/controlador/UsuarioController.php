@@ -82,7 +82,7 @@ class UsuarioController
                 $this->model->insertar($nombre_usuario, $nombre_completo, $correo, $rol, $contrasena_hash);
                 header("Location:  " . URL_BASE . "/usuario/index");
             } else {
-                echo "⚠️ Por favor, completa todos los campos.";
+                echo "Por favor, completa todos los campos.";
             }
         }
     }

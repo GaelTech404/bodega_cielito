@@ -118,7 +118,7 @@ class VentaController
                     echo "Error al guardar: " . $e->getMessage();
                 }
             } else {
-                echo "⚠️ Datos inválidos o incompletos.";
+                echo "Datos inválidos o incompletos.";
             }
         }
     }

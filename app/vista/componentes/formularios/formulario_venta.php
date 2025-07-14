@@ -18,7 +18,8 @@
         <!-- Fecha -->
         <div class="col-auto">
             <label class="form-label">Fecha</label>
-            <input type="date" name="fecha_venta" class="form-control" value="<?= date('Y-m-d') ?>" required>
+            <input type="datetime-local" name="fecha_venta" class="form-control" value="<?= date('Y-m-d\TH:i') ?>"
+                required>
         </div>
 
         <!-- Total -->
