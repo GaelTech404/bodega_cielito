@@ -43,6 +43,36 @@ class CompraModel extends ModelBase
         $stmt->execute();
         return $stmt->get_result()->fetch_assoc();
     }
+    public function obtenerComprasPorUsuario($id_usuario)
+    {
+        $sql = "SELECT c.id_compra, c.total, c.fecha_compra, p.nombre AS proveedor
+            FROM compras c
+            LEFT JOIN proveedores p ON c.id_proveedor = p.id_proveedor
+            WHERE c.id_usuario = ?
+            ORDER BY c.fecha_compra DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("i", $id_usuario);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function obtenerComprasPorMes()
+    {
+        $sql = "SELECT MONTH(fecha_compra) AS mes, SUM(total) AS total
+            FROM compras
+            WHERE YEAR(fecha_compra) = YEAR(CURDATE())
+            GROUP BY mes
+            ORDER BY mes";
+
+        $result = $this->db->query($sql);
+        $meses = array_fill(1, 12, 0);
+        while ($row = $result->fetch_assoc()) {
+            $meses[(int) $row['mes']] = (float) $row['total'];
+        }
+        return $meses;
+    }
 
     public function insertarCompraCompleta($id_proveedor, $id_usuario, $fecha_compra, $estado, $productos, $cantidades, $precios)
     {

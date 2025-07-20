@@ -8,12 +8,14 @@ class RedirectHelper
         }
 
         if ($mensaje) {
-            $_SESSION['flash_message'] = $mensaje;
+            SessionHelper::flash('error', $mensaje);
         }
+
         if (headers_sent($archivo, $linea)) {
             echo "⚠️ Headers already sent in $archivo on line $linea<br>";
             exit;
         }
+
         header("Location: $ruta");
         exit();
     }

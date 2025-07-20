@@ -1,9 +1,9 @@
 <div class="container mt-4">
-    <h2 class="main-title mb-3">🤖 Asesor Virtual para Bodega</h2>
+    <h2 class="main-title mb-3"><i class="bi bi-robot"></i> Asesor Virtual para Bodega</h2>
 
-    <div class="chat-box border rounded p-3 mb-3 overflow-auto" id="chatBox" >
+    <div class="chat-box border rounded p-3 mb-3 overflow-auto" id="chatBox">
         <div class="chat-message bot">
-            💬 Hola, soy tu asesor. Pregúntame sobre productos, inventario o proveedores.
+            <i class="bi bi-chat-dots"></i> Hola, soy tu asesor. Pregúntame sobre productos, inventario o proveedores.
         </div>
     </div>
 

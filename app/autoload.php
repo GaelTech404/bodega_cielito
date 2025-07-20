@@ -6,7 +6,7 @@ spl_autoload_register(function ($clase) {
         APP_PATH . '/helpers/' . $clase . '.php',
         APP_PATH . '/controlador/' . $clase . '.php',
         APP_PATH . '/services/' . $clase . '.php',
-
+        APP_PATH . '/services/formatters/'. $clase . '.php',
         APP_PATH . '/services/IAContext/' . $clase . '.php',
 
     ];

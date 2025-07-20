@@ -42,6 +42,24 @@ class VentaModel extends ModelBase
         $stmt->execute();
         return $stmt->get_result()->fetch_assoc();
     }
+    public function obtenerVentasPorMes()
+    {
+        $sql = "SELECT MONTH(fecha_venta) AS mes, SUM(total) AS total
+            FROM ventas
+            WHERE YEAR(fecha_venta) = YEAR(CURDATE())
+            GROUP BY mes
+            ORDER BY mes";
+
+        $result = $this->db->query($sql);
+
+        $meses = array_fill(1, 12, 0);
+
+        while ($row = $result->fetch_assoc()) {
+            $meses[(int) $row['mes']] = (float) $row['total'];
+        }
+
+        return $meses;
+    }
 
     public function obtenerVentasPorUsuario($id_usuario, $busqueda = '')
     {

@@ -1,6 +1,5 @@
 <?php
-
-
+require_once __DIR__ . '/../config/config.php'; 
 class IAContextService
 {
     private $db;
@@ -10,6 +9,7 @@ class IAContextService
     {
         $this->db = $db;
         $this->usuario = $usuario;
+        
     }
 
     public function generarContexto(): string

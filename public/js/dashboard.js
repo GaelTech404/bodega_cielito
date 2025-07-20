@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ventasPorCategoria,
         comprasPorMes,
         productosStockBajo,
-        productosMasRentables 
+        productosMasRentables
 
     } = window.dashboardData;
 
@@ -131,7 +131,7 @@ function crearGraficoLineAvanzado(id, labels, data) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'mes',
+                label: 'Mes (S/.)',
                 data: data,
                 borderColor: 'rgb(75, 192, 192)',
                 spanGaps: true,
@@ -174,7 +174,7 @@ function crearGraficoBarHorizontal(idCanvas, labels, data) {
             }]
         },
         options: {
-            indexAxis: 'y', 
+            indexAxis: 'y',
             responsive: true,
             scales: {
                 x: {

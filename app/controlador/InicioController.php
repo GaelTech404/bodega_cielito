@@ -10,15 +10,18 @@ class InicioController
 
         $this->db = Database::conectar();
 
+        $compraModel = new CompraModel($this->db);
         $dashboardModel = new DashboardModel($this->db);
+        $ventaModel = new VentaModel($this->db);
+
 
         $productosRentables = $dashboardModel->obtenerProductosMasRentables();
         $productoTop = $dashboardModel->obtenerProductoMasVendido();
         $productosBajoStock = $dashboardModel->obtenerProductosConStockBajo();
-        $ventasPorMes = $dashboardModel->obtenerVentasPorMes();
+        $ventasPorMes = $ventaModel->obtenerVentasPorMes();
         $topVendedores = $dashboardModel->obtenerTopVendedores();
         $ventasPorCategoria = $dashboardModel->obtenerVentasPorCategoria();
-        $comprasPorMes = $dashboardModel->obtenerComprasPorMes();
+        $comprasPorMes = $compraModel->obtenerComprasPorMes();
         $valorInventarioCompra = $dashboardModel->obtenerValorTotalInventarioCompra();
         $valorInventarioVenta = $dashboardModel->obtenerValorTotalInventarioVenta();
 

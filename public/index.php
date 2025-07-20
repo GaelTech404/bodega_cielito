@@ -4,14 +4,10 @@ ob_start(); // Activa el buffer de salida (evita errores al usar header())
 require_once __DIR__ . '/../app/config/config.php';
 require_once __DIR__ . '/../app/autoload.php';
 
-// ===========================
-// OPCIONAL: Activar modo debug
-// ===========================
+
 define('DEBUG_ROUTER', true);
 
-// ===========================
-// DETECCIÓN ROBUSTA DE URL
-// ===========================
+
 $requestUri = $_SERVER['REQUEST_URI'] ?? '';
 $scriptName = dirname($_SERVER['SCRIPT_NAME']);
 
@@ -37,9 +33,7 @@ $accion = $partes[1] ?? 'index';
 $parametros = array_slice($partes, 2);
 
 
-// ===========================
-// CARGA DEL CONTROLADOR
-// ===========================
+
 $archivo = APP_PATH . "/controlador/{$controlador}Controller.php";
 
 if (file_exists($archivo)) {
@@ -61,4 +55,4 @@ if (file_exists($archivo)) {
     echo "Error: Controlador '$controlador' no encontrado.";
 }
 
-ob_end_flush(); // Libera el contenido del buffer
+ob_end_flush(); 

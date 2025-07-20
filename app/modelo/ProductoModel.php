@@ -10,8 +10,7 @@ class ProductoModel extends ModelBase
         $sqlBase = "
         SELECT p.*, c.nombre AS categoria_nombre
         FROM productos p
-        LEFT JOIN categorias c ON p.id_categoria = c.id_categoria
-    ";
+        LEFT JOIN categorias c ON p.id_categoria = c.id_categoria";
 
         if ($busqueda !== '') {
             $sql = $sqlBase . " WHERE p.nombre LIKE ? OR c.nombre LIKE ?";
@@ -37,7 +36,12 @@ class ProductoModel extends ModelBase
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-
+    public function obtenerProductosActivosConPrecios()
+    {
+        $query = "SELECT nombre, precio_compra, precio_venta, stock FROM productos WHERE activo = 1";
+        $res = $this->db->query($query);
+        return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
+    }
     public function obtenerPorId($id)
     {
         $stmt = $this->db->prepare("SELECT * FROM productos WHERE id_producto = ?");

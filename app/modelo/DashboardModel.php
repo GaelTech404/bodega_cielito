@@ -57,6 +57,7 @@ class DashboardModel extends ModelBase
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+    
     public function obtenerProveedores()
     {
         $sql = "SELECT nombre, ruc, telefono, direccion, correo FROM proveedores";
@@ -72,25 +73,7 @@ class DashboardModel extends ModelBase
         $result = $this->db->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
-    public function obtenerVentasPorMes()
-    {
-        $sql = "SELECT MONTH(fecha_venta) AS mes, SUM(total) AS total
-            FROM ventas
-            WHERE YEAR(fecha_venta) = YEAR(CURDATE())
-            GROUP BY mes
-            ORDER BY mes";
-
-        $result = $this->db->query($sql);
-
-        // Convertimos a un arreglo de 12 meses con ceros donde no hay datos
-        $meses = array_fill(1, 12, 0);
-
-        while ($row = $result->fetch_assoc()) {
-            $meses[(int) $row['mes']] = (float) $row['total'];
-        }
-
-        return $meses; // Devuelve array: [1 => 1000, 2 => 1200, ..., 12 => 0]
-    }
+  
 
     public function obtenerVentasPorCategoria()
     {
@@ -105,21 +88,7 @@ class DashboardModel extends ModelBase
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function obtenerComprasPorMes()
-    {
-        $sql = "SELECT MONTH(fecha_compra) AS mes, SUM(total) AS total
-            FROM compras
-            WHERE YEAR(fecha_compra) = YEAR(CURDATE())
-            GROUP BY mes
-            ORDER BY mes";
-
-        $result = $this->db->query($sql);
-        $meses = array_fill(1, 12, 0);
-        while ($row = $result->fetch_assoc()) {
-            $meses[(int) $row['mes']] = (float) $row['total'];
-        }
-        return $meses;
-    }
+  
     public function obtenerValorTotalInventarioCompra()
     {
         $sql = "SELECT SUM(stock * precio_compra) AS valor_compra

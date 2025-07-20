@@ -65,7 +65,7 @@ switch ($tema) {
                 },
                 comprasPorMes: {
                     labels: <?= json_encode(["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]) ?>,
-                    // Solo en gráficos
+                
                     data: <?= json_encode(array_values($comprasPorMes)) ?>
                 },
                 productosStockBajo: <?= json_encode($productosBajoStock) ?>,

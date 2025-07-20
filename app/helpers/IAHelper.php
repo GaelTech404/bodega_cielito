@@ -15,16 +15,30 @@ class IAHelper
         }
 
         $apiKey = IA_API_KEY;
-        $url = 'https://api.groq.com/openai/v1/chat/completions';
+        $url = self::API_URL;
 
         $mensajes = [];
 
-        // 🧠 Instrucción base
         $mensajes[] = [
             "role" => "system",
-            "content" => "Eres un asesor experto en ventas e inventario para bodegas. Analiza la información proporcionada y responde con un tono profesional pero accesible. Evita lenguaje técnico excesivo como '5x producto', y prefiere frases como '5 unidades de arroz'. Sé claro, humano y útil."
+            "content" => "Eres un asesor experto en ventas e inventario para bodegas. Tu función es brindar información, no ejecutar acciones. Nunca debes registrar ventas, modificar stock o realizar operaciones en el sistema; solo puedes describir cómo hacerlo o responder preguntas basadas en los datos proporcionados. Si el usuario solicita registrar una venta, indícale que debe hacerlo desde el módulo correspondiente o pide confirmación externa."
         ];
 
+        $db = Database::conectar();
+        $fechaReal = (new self())->responderFecha();
+
+        $usuario = $_SESSION['usuario'] ?? ['rol' => 'cajero', 'id_usuario' => 0]; // o de donde venga
+        $ventasHoy = self::obtenerVentasDeHoy($db, $usuario);
+        $mensajes[] = ["role" => "system", "content" => $ventasHoy];
+
+        $mensajes[] = [
+            "role" => "system",
+            "content" => $fechaReal
+        ];
+        $mensajes[] = [
+            "role" => "system",
+            "content" => $ventasHoy
+        ];
 
         // 🔁 Agrega el contexto dinámico
         if ($contextoExtra) {
@@ -74,7 +88,74 @@ class IAHelper
         $resultado = json_decode($response, true);
         return $resultado['choices'][0]['message']['content'] ?? 'No se pudo obtener respuesta.';
     }
+    public static function obtenerVentasDeHoy(mysqli $db, array $usuario): string
+    {
+        $hoy = date('Y-m-d');
+        $rol = strtolower($usuario['rol']);
+        $idUsuario = $usuario['id_usuario'];
 
+        if ($rol === 'admin') {
+            $query = "
+            SELECT v.id_venta, v.total, u.nombre_usuario
+            FROM ventas v
+            JOIN usuarios u ON v.id_usuario = u.id_usuario
+            WHERE DATE(v.fecha_venta) = ?
+        ";
+            $stmt = $db->prepare($query);
+            $stmt->bind_param("s", $hoy);
+        } else {
+            // solo sus ventas
+            $query = "
+            SELECT v.id_venta, v.total
+            FROM ventas v
+            WHERE v.id_usuario = ? AND DATE(v.fecha_venta) = ?
+        ";
+            $stmt = $db->prepare($query);
+            $stmt->bind_param("is", $idUsuario, $hoy);
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows === 0) {
+            return $rol === 'admin'
+                ? "Hoy ($hoy) no se han registrado ventas."
+                : "No has registrado ventas hoy ($hoy).";
+        }
+
+        $texto = $rol === 'admin'
+            ? "🗓️ Ventas registradas el $hoy:\n"
+            : "🗓️ Tus ventas de hoy ($hoy):\n";
+
+        while ($venta = $result->fetch_assoc()) {
+            if ($rol === 'admin') {
+                $texto .= "- Venta ID {$venta['id_venta']} por {$venta['nombre_usuario']}: S/.{$venta['total']}\n";
+            } else {
+                $texto .= "- Venta ID {$venta['id_venta']}: S/.{$venta['total']}\n";
+            }
+        }
+
+        return $texto;
+    }
+
+
+    public function responderFecha()
+    {
+        $fecha = date('d \d\e F \d\e Y');
+        $diaIngles = date('l');
+        $dias = [
+            'Monday' => 'lunes',
+            'Tuesday' => 'martes',
+            'Wednesday' => 'miércoles',
+            'Thursday' => 'jueves',
+            'Friday' => 'viernes',
+            'Saturday' => 'sábado',
+            'Sunday' => 'domingo'
+        ];
+        $dia = $dias[$diaIngles] ?? $diaIngles;
+
+        return "Hoy es $dia, $fecha.";
+    }
 
 
 }
