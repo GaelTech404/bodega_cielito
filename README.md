@@ -39,7 +39,7 @@ $stack = [
 ---
 ### 📷 Vista previa
 
-![Vista previa del sistema](https://raw.githubusercontent.com/GaelTech404/bodega_cielito/main/public/assets/img/sistema_web.png)
+![Vista previa del sistema]([https://raw.githubusercontent.com/GaelTech404/bodega_cielito/main/public/assets/img/sistema_web.png](https://raw.githubusercontent.com/GaelTech404/bodega_cielito/refs/heads/main/public/img/sistema_web.png)
 ---
 ### 🧑‍💻 Autor
 Desarrollado por Angel 🇵🇪
